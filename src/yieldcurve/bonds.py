@@ -3,8 +3,8 @@ import numpy as np
 
 def cashflows(maturity, coupon_rate, freq=2, face=100):
     """Dates (en années) et montants des flux d'une obligation."""
-    n = int(round(maturity * freq))           # nombre de paiements
-    times = np.arange(1, n + 1) / freq        # 0.5, 1.0, 1.5, ...
+    n = int(np.ceil(maturity * freq - 1e-9))         # nb de coupons restants
+    times = maturity - np.arange(n)[::-1] / freq     # dates comptées depuis l'échéance
     amounts = np.full(n, face * coupon_rate / freq)                 # coupon par période : face * taux / freq
     amounts[-1] += face                       # au dernier flux, on rembourse le nominal
     return times, amounts
